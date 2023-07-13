@@ -29,7 +29,7 @@
         </template> -->
 
         <!-- 使用组件来做 -->
-        <van-tabbar v-model="currentIndex" active-color="#ff9854">
+        <van-tabbar v-model="currentIndex" active-color="#ff9854" route>
             <template v-for="(item, index) in tabbarData">
                 <van-tabbar-item :to="item.path">
                     <span>{{ item.text }}</span>
@@ -45,11 +45,19 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import tabbarData from "../../assets/Data/tabbar.js"
 import { getAssetURL } from "../../utils/load_img.js"
+import { useRoute } from "vue-router";
 
+const route = useRoute();
 const currentIndex = ref(0);
+watch(route, (newRoute) => {
+    // 可解决跳转路径导航栏不跳转问题
+    const index = tabbarData.findIndex(item => item.path === newRoute.path);
+    if (index === -1) return;
+    currentIndex.value = index;
+})
 
 </script>
 
@@ -61,6 +69,7 @@ const currentIndex = ref(0);
     right: 0;
     height: 50px;
     display: flex;
+    z-index: 10;
 
     border-top: 1px solid #736e6e;
 

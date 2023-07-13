@@ -4,7 +4,7 @@ import "normalize.css"
 import router from './router/index'
 import pinia from './stores/index'
 
-// import './assets/main.css'
+import './assets/css/index.css'
 
 const app = createApp(App)
 
