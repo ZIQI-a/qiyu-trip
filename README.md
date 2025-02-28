@@ -1,16 +1,18 @@
-# qy-trip
+# 奇遇旅途 | 移动端租房项目
 
-This template should help get you started developing with Vue 3 in Vite.
+## 项目介绍
 
-## Recommended IDE Setup
+本项目是基于Vite + Pinia + Vant 3 编写的模仿某民宿网站的移动端页面。
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+项目基本页面展示
 
-## Customize configuration
+![image-20250228165833958](https://raw.githubusercontent.com/ZIQI-a/pic-repository/main/markdown/image-20250228165833958.png)![image-20250228165930965](https://raw.githubusercontent.com/ZIQI-a/pic-repository/main/markdown/image-20250228165930965.png)![image-20250228170041832](https://raw.githubusercontent.com/ZIQI-a/pic-repository/main/markdown/image-20250228170041832.png)![image-20250228170121490](https://raw.githubusercontent.com/ZIQI-a/pic-repository/main/markdown/image-20250228170121490.png)
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+![image-20250228170210388](https://raw.githubusercontent.com/ZIQI-a/pic-repository/main/markdown/image-20250228170210388.png)
 
-## Project Setup
+![image-20250228170227198](https://raw.githubusercontent.com/ZIQI-a/pic-repository/main/markdown/image-20250228170227198.png)
+
+## 项目启动
 
 ```sh
 npm install
