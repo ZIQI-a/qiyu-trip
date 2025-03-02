@@ -3,6 +3,7 @@ import axios from 'axios'
 import { BASE_URL, TIMEOUT } from './config'
 import useMainStore from '@/stores/modules/main';
 
+// 全局axios请求
 class HYRequest {
   constructor(baseURL, timeout = 10000) {
     this.instance = axios.create({

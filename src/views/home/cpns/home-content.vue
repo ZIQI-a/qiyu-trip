@@ -3,6 +3,7 @@
         <h2>热门精选</h2>
         <div class="list">
             <template v-for="(item, index) in houselist" :key="item.data.houseId">
+                <!--  两种不同的展示列表的形式-->
                 <homeContentV9 v-if="item.discoveryContentType === 9" :item-data="item.data"
                     @click="itemClick(item.data)" />
                 <homeContentV3 v-else-if="item.discoveryContentType === 3" :item-data="item.data"

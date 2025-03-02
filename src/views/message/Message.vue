@@ -3,8 +3,7 @@
         <van-nav-bar title="消息中心" left-text="返回" @click-left="onClickLeft" left-arrow>
             <template #right>
                 <div class="right">
-                    <van-icon class="icon" name="friends-o" size="20" />
-                    客服
+                    <van-icon class="icon" name="friends-o" size="30" />
                 </div>
             </template>
         </van-nav-bar>

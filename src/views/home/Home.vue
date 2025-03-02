@@ -1,9 +1,8 @@
 <template>
     <div class="home" ref="homeRef">
+        <!-- 顶部header-->
         <nav-bar />
-        <div class="banner">
-            <img src="../../assets/img/home/banner.webp" alt="">
-        </div>
+      <!-- 搜索模块 -->
         <home-search-box />
         <div class="searchBar" v-if="isShowSearchBar">
             <search-bar :start-date="'01.12'" :end-date="'01.13'" />
@@ -21,7 +20,6 @@ export default { name: "home" }
 //导入其他vue的模块时必须有vue的后缀，否则没有样式
 import navBar from '@/views/home/cpns/nav-bar.vue'
 import homeSearchBox from '@/views/home/cpns/home-search-box.vue'
-// import hyRequest from "@/service/request/index.js"
 import useHomeStore from '@/stores/modules/home.js';
 import homeCate from '@/views/home/cpns/home-cate.vue';
 import homeContent from './cpns/home-content.vue';
@@ -29,12 +27,6 @@ import searchBar from '@/components/search-bar/search-bar.vue';
 import onScroll from '@/hooks/onScroll'
 import { ref, watch } from 'vue';
 
-// const hotSuggest = ref([]);
-// hyRequest.get({
-//     url: "/home/hotSuggests"
-// }).then(res => {
-//     hotSuggest.value = res.data
-// })
 
 const homeStore = useHomeStore();
 homeStore.fetchHotSuggestData();
@@ -76,12 +68,6 @@ watch(scrollTop, (newTop) => {
     overflow-y: auto;
     box-sizing: border-box;
     padding-bottom: 60px;
-}
-
-.banner {
-    img {
-        width: 100%;
-    }
 }
 
 .searchBar {
