@@ -16,7 +16,6 @@
           <span class="tip">入住</span>
           <span class="data">{{ startDate }}</span>
         </div>
-
       </div>
       <div class="stay">共{{ stayDays }}晚</div>
       <div class="end">
@@ -24,15 +23,81 @@
           <span class="tip">离店</span>
           <span class="data">{{ endDate }}</span>
         </div>
-
       </div>
     </div>
     <van-calendar v-model:show="showDate" type="range" @confirm="onConfirm" :round="false" color="#ff9854"/>
     <!-- 修改价格人数 -->
     <div class="section price-counter bottom-gray-line">
-      <div class="start">价格不限</div>
-      <div class="end">人数不限</div>
+      <!-- 价格修改 -->
+      <div class="start" @click="priceDrawer = true">
+        {{ displayPrice[0] === 0 && displayPrice[1] === 0 ? '价格不限' : `¥ ${displayPrice[0]} - ¥ ${displayPrice[1]}` }}
+      </div>
+      <el-drawer
+          v-model="priceDrawer"
+          title="价格选择"
+          direction="btt"
+          :before-close="handleClose"
+          style="border-top-left-radius: 30px; border-top-right-radius: 30px;"
+      >
+        <span>价格区间 ¥ {{ beginPrice }} - {{ endPrice }}</span>
+        <el-slider v-model="priceRange" @input="handleSlider" :min="0" :max="maxPriceValue" range/>
+        <div>
+          <el-row :gutter="10">
+            <el-col
+                :xs="12"
+                :sm="8"
+                v-for="tag in priceTags"
+                :key="tag.key"
+                :span="8"
+                style="margin-bottom: 8px;"
+            >
+              <el-check-tag
+                  class="tag-item"
+                  :checked="activeTag === tag.key"
+                  @click="handleTagClick(tag)"
+              >
+                {{ tag.label }}
+              </el-check-tag>
+            </el-col>
+          </el-row>
+        </div>
+        <el-space style="margin-top: 10px">
+          <el-button class="clearBtn" @click="clearPrice">清空</el-button>
+          <el-button class="okBtn" @click="onPriceChange">确认</el-button>
+        </el-space>
+      </el-drawer>
+      <!-- 修改人数 -->
+      <div class="end" @click="peopleDrawer = true">{{ displayPeople ? displayPeople : '人数不限'}}</div>
+      <el-drawer
+          v-model="peopleDrawer"
+          title="人数选择"
+          direction="btt"
+          :before-close="handleClose"
+          style="border-top-left-radius: 30px; border-top-right-radius: 30px;"
+      >
+        <div>
+          <el-row :gutter="10">
+            <el-col
+                :xs="12"
+                :sm="8"
+                v-for="tag in peopleTags"
+                :key="tag.key"
+                :span="8"
+                style="margin-bottom: 8px;"
+            >
+              <el-check-tag
+                  class="tag-item"
+                  :checked="activeTag === tag.key"
+                  @click="handlePeopleTagClick(tag)"
+              >
+                {{ tag.label }}
+              </el-check-tag>
+            </el-col>
+          </el-row>
+        </div>
+      </el-drawer>
     </div>
+
     <!-- 关键字 -->
     <div class="section keyword bottom-gray-line">关键字/位置/名宿名</div>
     <!-- 热门建议 -->
@@ -151,9 +216,107 @@ const searchClick = () => {
   })
 }
 
+/**
+ * 价格弹出框
+ */
+// 默认在外部展示的价格
+const displayPrice = ref([0, 0])
+// 定义用到的变量
+const priceDrawer = ref(false);
+const beginPrice = ref(0);
+const endPrice = ref('不限');
+
+const maxPriceValue = 2000
+const priceRange = ref([0, maxPriceValue])
+const activeTag = ref(null)
+
+const priceTags = [
+  {key: 'hundred', label: '￥100以下', range: [0, 100]},
+  {key: 'twoHundred', label: '￥100-200', range: [100, 200]},
+  {key: 'threeHundred', label: '￥200-300', range: [200, 300]},
+  {key: 'fourHundred', label: '￥300-400', range: [300, 400]},
+  {key: 'sixHundred', label: '￥400-600', range: [400, 600]},
+  {key: 'thousand', label: '￥600-1000', range: [600, 1000]},
+  {key: 'twoThousand', label: '￥1000-2000', range: [1000, 2000]},
+  {key: 'maxPrice', label: '￥2000以上', range: [2000, maxPriceValue]}
+]
+
+const handleTagClick = (tag) => {
+  // 切换选中状态
+  activeTag.value = activeTag.value === tag.key ? null : tag.key
+  // 更新滑块值
+  priceRange.value = tag.range
+  updatePriceDisplay(tag.range)
+}
+
+const handleSlider = (value) => {
+  // 滑块变化时清除标签选中
+  activeTag.value = null
+  updatePriceDisplay(value)
+}
+
+const updatePriceDisplay = (range) => {
+  beginPrice.value = range[0]
+  endPrice.value = range[1] === maxPriceValue ? '不限' : range[1]
+}
+/** 清楚按钮 */
+const clearPrice = () => {
+  // 改变范围
+  updatePriceDisplay([0, 2000])
+  // 不选中价格标签
+  activeTag.value = null
+  priceRange.value = [0, 2000]
+}
+/** 确认价格按钮 */
+const onPriceChange = () => {
+  if (activeTag.value) {
+    const currentTag = priceTags.find(tag => tag.key === activeTag.value);
+    displayPrice.value = [...currentTag.range];
+  }
+  // 如果手动调整滑块
+  else {
+    // 处理"不限"的特殊情况
+    const endValue = endPrice.value === '不限'
+        ? maxPriceValue
+        : priceRange.value[1]
+    displayPrice.value = [priceRange.value[0], endValue]
+  }
+
+  // 关闭抽屉（保持原有逻辑）
+  priceDrawer.value = false
+}
+
+/**
+ * 人数选择弹出框
+ */
+
+// 定义用到的变量
+const peopleDrawer = ref(false);
+// 显示人数
+const displayPeople = ref();
+
+const peopleTags = [
+  {key: '1', label: '1人'},
+  {key: '2', label: '2人'},
+  {key: '3', label: '3人'},
+  {key: '4', label: '4人'},
+  {key: '5', label: '5人'},
+  {key: '6', label: '6人'},
+  {key: '7', label: '7人'},
+  {key: '8', label: '7人以上'}
+]
+
+// 修改人数选择
+const handlePeopleTagClick = (tag) => {
+  displayPeople.value = tag.label;
+  peopleDrawer.value = false;
+}
+
+
 </script>
 
 <style lang="less" scoped>
+
 .search-box {
   --van-calendar-popup-height: 100%;
 }
@@ -272,5 +435,49 @@ const searchClick = () => {
     color: #fff;
     background-image: var(--theme-linear-gradient);
   }
+}
+
+:deep(.el-drawer) {
+  height: 50% !important;
+}
+
+.el-check-tag {
+  border-radius: 30px;
+}
+
+.el-check-tag.el-check-tag--primary.is-checked {
+  color: #ff9645;
+  background-color: #fff7f0;
+  border: 1px #ff9645 solid;
+}
+
+:deep(.el-slider__button) {
+  border: 0.53333vw solid #ff9645 !important;
+}
+
+:deep(.el-slider__bar) {
+  background-color: #ff9645;
+}
+
+:deep(.el-drawer__body) {
+  padding: 5px 30px;
+}
+
+.tag-item {
+  width: 100%;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.okBtn {
+  background-color: #ff9645;
+  color: white;
+  border-radius: 20px;
+  width: 200px;
+}
+
+.clearBtn {
+  border-radius: 20px;
+  width: 100px;
 }
 </style>

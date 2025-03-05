@@ -17,5 +17,18 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // 将 vue 相关库单独分块
+          vue: ['vue', 'vue-router', 'pinia'],
+          // 将大依赖包分块
+          lodash: ['lodash-es']
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000
   }
 })

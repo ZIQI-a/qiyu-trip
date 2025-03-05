@@ -25,11 +25,11 @@ export default function onScroll(elRef) {
         }
 
         // console.log("监听到滚动")
-        if (clientHeight.value + scrollTop.value >= scrollHeight.value) {
+        if (clientHeight.value + scrollTop.value - 100 >= scrollHeight.value) {
             console.log("滚动到底部")
             isReachBottom.value = true;
         }
-    }, 300);
+    }, 200);
     // 进入时开启，退出时关闭监听
     onMounted(() => {
         if (elRef) el = elRef.value;

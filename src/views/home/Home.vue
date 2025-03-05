@@ -7,7 +7,9 @@
         <div class="searchBar" v-if="isShowSearchBar">
             <search-bar :start-date="'01.12'" :end-date="'01.13'" />
         </div>
+      <!-- 房屋列表 -->
         <home-cate />
+      <!-- 房屋内容 -->
         <home-content />
     </div>
 </template>
@@ -33,17 +35,9 @@ homeStore.fetchHotSuggestData();
 homeStore.fetchCategoriesData();
 homeStore.fetchHouselistData();
 
-// const btnClick = (currentPage) => {
-//     console.log("加载更多数据")
-//     homeStore.fetchHouselistData();
-// }
-
-// onScroll(() => {
-//     homeStore.fetchHouselistData();
-// });
-
 const homeRef = ref();
 
+// 监听滚动
 const { isReachBottom, scrollTop } = onScroll(homeRef);
 watch(isReachBottom, (newValue) => {
     if (newValue) {
